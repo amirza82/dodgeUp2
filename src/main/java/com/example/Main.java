@@ -6,16 +6,18 @@ import processing.core.PApplet;
 
 public class Main extends PApplet{
 
-        public static int x;
+    public static int x;
     public static int y;
     public static boolean check = false;
     public static boolean blokeCrash;
     public static PApplet p;
     public Human h = new Human();
     public static ArrayList<Bloke> blokes = new ArrayList<Bloke>();
+    public static ArrayList<Bullet> bullets = new ArrayList<Bullet>(); 
     public static int level = 0;
     public static int score = 0;
-
+    public static int shootEveryXFrames = 30;
+    public static int shootCount = 0;
     
     public static void main(String[] args) {
         PApplet.main("com.example.Main", args);
@@ -32,9 +34,6 @@ public class Main extends PApplet{
         blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 30, -100, 1));
         blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 90, -101, 1));
         blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 300, -102, 1));
-
-
-
     }
 
     @Override
@@ -49,6 +48,12 @@ public class Main extends PApplet{
             for (Bloke bloke : blokes) {
                 bloke.makeAndShow();
             }
+            for (Bullet bullet : bullets) {
+                bullet.makeAndShow();
+            }
+            for (Bullet bullet : bullets) {
+                bullet.setBulletY(bullet.getBulletY() - 10);
+            }
             for (Bloke bloke : blokes) {
                 bloke.setBlokeY(bloke.getBlokeY()+4 + bloke.getSpeedY());
             }
@@ -57,13 +62,31 @@ public class Main extends PApplet{
             line(0, 600, 400, 600);
             h.makeAndShow();
 
-            //if a bloke is gone, make a new one in ransom a place.
+            //if a bloke is gone, make a new one in a random place.
             
             for (Bloke bloke : blokes) {
                 if (bloke.getBlokeY() > 700) {
                     blokes.remove(bloke);
                     Bloke.addBloke();
                     break;
+                }
+            }
+
+            //add new bullet
+            shoot();
+            //check bullet out of screen or crash
+            outter:
+            for (Bullet bullet : bullets) {
+                if(bullet.getBulletY() <= 0){
+                    bullets.remove(bullet);
+                    break;
+                } else {
+                    for (Bloke bloke : blokes) {
+                        if (bulletCrash(bullet, bloke)) {
+                            bullets.remove(bullet);
+                            break outter;
+                        }
+                    }
                 }
             }
 
@@ -98,6 +121,25 @@ public class Main extends PApplet{
                 }
             }
         }
+    }
+
+    public boolean bulletCrash(Bullet bullet, Bloke bloke) {
+
+        if (bullet.getBulletY() <= bloke.getBlokeY() + 60 && bullet.getBulletY() > bloke.getBlokeY()) {
+            if (bullet.getBulletX() + Bullet.getR() >= bloke.getBlokeX() && bullet.getBulletX() - Bullet.getR() <= bloke.getBlokeX() + 30) {
+                blokes.remove(bloke);
+                Bloke.addBloke();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void shoot (){
+        if (shootCount == shootEveryXFrames) {
+            shootCount = 0;
+            bullets.add(new Bullet(252, 215, 3, mouseX, 580));
+        } else shootCount++;
     }
 
 }
