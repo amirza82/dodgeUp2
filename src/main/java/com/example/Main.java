@@ -16,7 +16,7 @@ public class Main extends PApplet{
     public static ArrayList<Bullet> bullets = new ArrayList<Bullet>(); 
     public static int level = 0;
     public static int score = 0;
-    public static int shootEveryXFrames = 30;
+    public static int shootEveryXFrames = 40;
     public static int shootCount = 0;
     
     public static void main(String[] args) {
@@ -26,14 +26,14 @@ public class Main extends PApplet{
     @Override
     public void setup(){
         p = this;
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 10, 11, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 100, 12, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 200, 13, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 300, 14, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 360, 15, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 30, -100, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 90, -101, 1));
-        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 300, -102, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 10, 11, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 100, 12, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 200, 13, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 300, 14, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 360, 15, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 30, -100, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 90, -101, 1, 1));
+        blokes.add(new Bloke((int) random(10, 255), (int) random(10, 255), (int) random(10, 255), 300, -102, 1, 1));
     }
 
     @Override
@@ -83,6 +83,7 @@ public class Main extends PApplet{
                 } else {
                     for (Bloke bloke : blokes) {
                         if (bulletCrash(bullet, bloke)) {
+                            bloke.setLife(bloke.getLife() - 1);
                             bullets.remove(bullet);
                             break outter;
                         }
@@ -127,8 +128,10 @@ public class Main extends PApplet{
 
         if (bullet.getBulletY() <= bloke.getBlokeY() + 60 && bullet.getBulletY() > bloke.getBlokeY()) {
             if (bullet.getBulletX() + Bullet.getR() >= bloke.getBlokeX() && bullet.getBulletX() - Bullet.getR() <= bloke.getBlokeX() + 30) {
+                if (bloke.getLife() == 1) {
                 blokes.remove(bloke);
                 Bloke.addBloke();
+                }
                 return true;
             }
         }

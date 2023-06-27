@@ -9,14 +9,16 @@ public class Bloke implements Interface{
     private int blokeX;
     private int blokeY;
     private int speedY;
+    private Integer life;
 
-    public Bloke(int blokeColorR, int blokeColorG, int blokeColorB, int blokeX, int blokeY, int speedY) {
+    public Bloke(int blokeColorR, int blokeColorG, int blokeColorB, int blokeX, int blokeY, int speedY, Integer life) {
         this.blokeColorR = blokeColorR;
         this.blokeColorG = blokeColorG;
         this.blokeColorB = blokeColorB;
         this.blokeX = blokeX;
         this.blokeY = blokeY;
         this.speedY = speedY;
+        this.life = life;
     }
 
     public int getBlokeHight() {
@@ -73,6 +75,14 @@ public class Bloke implements Interface{
         this.speedY = speedY;
     }
 
+    public Integer getLife() {
+        return life;
+    }
+
+    public void setLife(Integer life) {
+        this.life = life;
+    }
+
 
 
     //methods
@@ -80,6 +90,8 @@ public class Bloke implements Interface{
     public void makeAndShow() {
         Main.p.fill(blokeColorR, blokeColorG, blokeColorB);
         Main.p.rect(blokeX, blokeY, blokeWidth, blokeHight);
+        Main.p.fill(0);
+        Main.p.text(this.life.toString(), this.blokeX+10, this.blokeY+30);
     }
 
     public static void addBloke(){
@@ -96,7 +108,7 @@ public class Bloke implements Interface{
                 }
             }
             if (!Main.blokeCrash) {
-                Main.blokes.add(new Bloke((int) Main.p.random(10, 255), (int) Main.p.random(10, 255), (int) Main.p.random(10, 255), Main.x, Main.y, (int) Main.p.random(-2, 5)));
+                Main.blokes.add(new Bloke((int) Main.p.random(10, 255), (int) Main.p.random(10, 255), (int) Main.p.random(10, 255), Main.x, Main.y, (int) Main.p.random(-2, 5), (int) Main.p.random(1, 3)));
                 Main.level++;
                 break;
             }
